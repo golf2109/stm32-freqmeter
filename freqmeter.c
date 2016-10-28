@@ -204,7 +204,11 @@ void poll_command(void) {
   }
 }
 
+char buffer[BUFFER_SIZE];
+
 int main(void) {
+	*((uint32_t*)(0xE000E008)) |= 0x2;
+	
   rcc_clock_setup_in_hse_8mhz_out_72mhz();
   rcc_periph_clock_enable(RCC_GPIOA); /* For MCO. */
   rcc_periph_clock_enable(RCC_GPIOB); /* For LED, USB pull-up and TIM2. */
@@ -218,9 +222,9 @@ int main(void) {
   gpio_set_mode(GPIOA, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, GPIO1);
   gpio_clear(GPIOA, GPIO1);
 
-  /* Setup PB9 to pull up the D+ high. The circuit is active low. */
-  gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_OPENDRAIN, GPIO9);
-  gpio_clear(GPIOB, GPIO9);
+  /* Pull USB_DISCONNECT high so to enable USB buffer */
+  gpio_set_mode(GPIOA, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, GPIO10);
+  gpio_set(GPIOA, GPIO10);
 
   usbcdc_init();
 
@@ -236,7 +240,6 @@ int main(void) {
   while (systick_ms < 500);
 
   /* The loop. */
-  char buffer[BUFFER_SIZE];
   int len;
   uint16_t written;
   uint32_t last_ms = 0;
@@ -264,6 +267,7 @@ int main(void) {
       hold ? "ON " : "OFF",
       filters_name[filter_current]
     );
+
     if (len > 0) {
       written = 0;
 
