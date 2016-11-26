@@ -9,6 +9,7 @@
 #include <libopencm3/usb/usbd.h>
 
 #include "usbcdc.h"
+#include "st7036.h"
 
 #define ARRAY_SIZE(x) (sizeof(x) / sizeof(x[0]))
 
@@ -217,6 +218,9 @@ int main(void) {
   /* Pull PA1 down to GND, which is adjascent to timer imput and can be used as an convenient return path. */
   gpio_set_mode(GPIOA, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, GPIO1);
   gpio_clear(GPIOA, GPIO1);
+
+  /* Initialize st7036 display. Must be done _before_ USB enumeration */
+  st7036_Init();
 
   /* Setup PB9 to pull up the D+ high. The circuit is active low. */
   gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_OPENDRAIN, GPIO9);

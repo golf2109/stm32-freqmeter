@@ -4,6 +4,7 @@ LDSCRIPT    = stm32f103x8.ld
 SERIAL      = /dev/ttyUSB0
 OBJS        = freqmeter.o \
               usbcdc.o \
+              st7036.o \
 
 
 DOCS        = README.html \
