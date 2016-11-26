@@ -244,7 +244,6 @@ int main(void) {
   int len;
   uint16_t written;
   uint32_t last_ms = 0;
-
   while (freq == 0);
 
   /* The loop (for real). */
@@ -268,10 +267,11 @@ int main(void) {
       hold ? "ON " : "OFF",
       filters_name[filter_current]
     );
-    if (len > 0) {
+
+	 if (len > 0) {
       written = 0;
 
-      while (written < len) {
+      while ((written < len) && (systick_ms < (last_ms + DISP_DELAY))) {
         if ((len - written) > PACKET_SIZE) {
           written += usbcdc_write(buffer + written, PACKET_SIZE);
         } else {
@@ -280,6 +280,9 @@ int main(void) {
       }
     }
 
+	 st7036_Home();
+	 st7036_integerWrite(freq - 65536);
+	 
     while (systick_ms < (last_ms + DISP_DELAY));
     last_ms = systick_ms;
   }

@@ -1,16 +1,15 @@
 /**
  * st7036 simple display Driver
  * Uses 4-bit interface. Display is powered with Vcc=5V, signals are 3V
- * Pinout
 
- Signal     Display Pin    STM32F4 GPIO
- RS         39             PA1
- RW         37             PA2
- EN         36             PA3
- D4         31             PA4
- D5         30             PA5
- D6         29             PA6
- D7         28             PA7
+ Signal     Display Pin    STM32F1 GPIO     Maple Mini pin
+ RS         39             PA1              10
+ RW         37             PA2              9
+ EN         36             PA3              8
+ D4         31             PA4              7
+ D5         30             PA5              6
+ D6         29             PA6              5
+ D7         28             PA7              4
 */
 
 #include <libopencm3/stm32/rcc.h>

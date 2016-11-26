@@ -9,7 +9,8 @@ const pin_t db[] = {{GPIOA, GPIO4}, {GPIOA, GPIO5}, {GPIOA, GPIO6}, {GPIOA, GPIO
 static void commandWrite(int cmd);
 static void senable(void);
 static void delay(int delay_ms);
-
+static void udelay(int delay_us);
+	
 /**
  * Public interface
  */
@@ -19,7 +20,7 @@ int st7036_Init(void)
 	int i;
 
 	/* Initialize pins */
-	//rcc_periph_clock_enable(RCC_GPIOA);
+	rcc_periph_clock_enable(RCC_GPIOA);
 
 	gpio_set_mode(rs.port, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, rs.pin);
 	gpio_set_mode(rw.port, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, rw.pin);
@@ -28,11 +29,9 @@ int st7036_Init(void)
 	for(i=0; i<4; i++)
 		gpio_set_mode(db[i].port, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, db[i].pin);
 
-	//return 0; //ok
-	
 	/* Initialize display */
 	gpio_clear(rw.port, rw.pin);
-
+	
 	commandWrite(0x3);
 	delay(64);
 	commandWrite(0x3);
@@ -50,8 +49,6 @@ int st7036_Init(void)
 	commandWrite(4);
 	delay(20);
 
-	//return 0;//ok
-	
 	/* Set Contrast lowest bits */
 	commandWrite(7);
 	commandWrite(1);
@@ -79,19 +76,18 @@ int st7036_Init(void)
 	delay(100);
 	commandWrite(6);
 	delay(20);
-	
-	//return 0; ok but before USB enumeration
 
 	st7036_Clear();
 	st7036_Home();
-
-	//return 0;//nok
 	
-	st7036_dataWrite('H');
-	st7036_dataWrite('e');
-	st7036_dataWrite('l');
-	st7036_dataWrite('l');
-	st7036_dataWrite('o');
+	st7036_dataWrite('S');
+	st7036_dataWrite('T');
+	st7036_dataWrite('M');
+	st7036_dataWrite('3');
+	st7036_dataWrite('2');
+	st7036_dataWrite('F');
+	st7036_dataWrite('r');
+	st7036_dataWrite('q');
 	
 	return 0;
 }
@@ -151,6 +147,13 @@ int st7036_dataWrite(unsigned int data)
 
 int st7036_integerWrite(int data)
 {
+	int divisor = 10000000;
+	
+	while(divisor){
+		st7036_dataWrite('0' + ((data/divisor) % 10));
+		divisor /= 10;
+	}
+
 	return 0;
 }
 
@@ -158,13 +161,22 @@ int st7036_integerWrite(int data)
  */
 
 /* Very poor delay function */
-#define CYCLES_MS 72000
+#define CYCLES_MS (72000/4)
+#define CYCLES_uS (72/4)
 void delay(int delay_ms)
 {
 	int i;
 	for (i = 0; i < delay_ms * CYCLES_MS; i++)
 		__asm__("nop");
 }
+
+void udelay(int delay_us)
+{
+	int i;
+	for (i = 0; i < delay_us * CYCLES_uS; i++)
+		__asm__("nop");
+}
+
 
 static void commandWrite(int cmd)
 {
@@ -194,5 +206,4 @@ static void senable(void)
 	gpio_set(en.port, en.pin);
 	delay(1);
 }
-
 
