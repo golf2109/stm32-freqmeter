@@ -55,8 +55,8 @@ int st7036_Init(void)
 	delay(20);
 
 	/* Set Contrast highest bits */
-	commandWrite(7);
-	commandWrite(0x7);
+	commandWrite(5);
+	commandWrite(0x5);
 	delay(20);
 
 	/* Power on */
