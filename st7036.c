@@ -1,9 +1,9 @@
 #include "st7036.h"
 
-const pin_t rs = {GPIOA, GPIO1};
-const pin_t rw = {GPIOA, GPIO2};
-const pin_t en = {GPIOA, GPIO3};
-const pin_t db[] = {{GPIOA, GPIO4}, {GPIOA, GPIO5}, {GPIOA, GPIO6}, {GPIOA, GPIO7}};
+const pin_t rs = {GPIOA, GPIO7};
+const pin_t rw = {GPIOA, GPIO6};
+const pin_t en = {GPIOA, GPIO5};
+const pin_t db[] = {{GPIOA, GPIO4}, {GPIOA, GPIO3}, {GPIOA, GPIO2}, {GPIOA, GPIO1}};
 
 /* Private interface */
 static void commandWrite(int cmd);
@@ -55,8 +55,8 @@ int st7036_Init(void)
 	delay(20);
 
 	/* Set Contrast highest bits */
-	commandWrite(5);
-	commandWrite(0xe);
+	commandWrite(7);
+	commandWrite(0x7);
 	delay(20);
 
 	/* Power on */

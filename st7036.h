@@ -3,13 +3,13 @@
  * Uses 4-bit interface. Display is powered with Vcc=5V, signals are 3V
 
  Signal     Display Pin    STM32F1 GPIO     Maple Mini pin
- RS         39             PA1              10
- RW         37             PA2              9
- EN         36             PA3              8
+ RS         39             PA1              4
+ RW         37             PA2              5
+ EN         36             PA3              6
  D4         31             PA4              7
- D5         30             PA5              6
- D6         29             PA6              5
- D7         28             PA7              4
+ D5         30             PA5              8
+ D6         29             PA6              9
+ D7         28             PA7              10
 */
 
 #include <libopencm3/stm32/rcc.h>
